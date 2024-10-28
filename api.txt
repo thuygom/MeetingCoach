@@ -1,0 +1,17 @@
+화자분리 (어느정도 완료)
+-> google speech to text/ pyannote-audio
+음성인식 (어느정도 완료)
+-> google speech to text
+
+음성 겹침(Overlap) 분석
+-> 타임스탬프 기반 대화 분석
+
+화자 추론
+-> speechBrain
+음성 감정분석
+->m3hrdadfi/wav2vec2-large-xlsr-53-emotion-recognition
+->SpeechBrain
+
+표정 및 제스쳐 인식
+-> Medaipipe
+-> openCV + DeepFace
