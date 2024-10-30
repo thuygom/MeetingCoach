@@ -1,6 +1,16 @@
 # MeetingCoach
 Face&amp;Motion regognition And Speaker Diarization for Meeting Feedback
 
+한거 : 
+
+google speech to text기반 음성인식, hugging face 모델 기반 화자분리, LLM API 활용 텍스트 요약,
+
+화자분리 데이터 기반으로 화자별 내용 분리
+
+해야할거 : 
+
+화자별 음성 감정분석, 표정인식, 제스쳐인식, 참여도 계산
+
 - diarization -> hugging face pyannote/speaker-diarization-3.1
 
   - torch 2.5.0+cu124

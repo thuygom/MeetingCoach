@@ -1,8 +1,11 @@
+from pyannote.audio import Pipeline
 from google.cloud import speech_v1p1beta1 as speech
 from pydub import AudioSegment
 import io
-import os
 import wave
+import torchaudio
+import pandas as pd
+import torch
 
 def get_sample_rate(file_path):
     """WAV 파일의 샘플 레이트를 확인합니다."""
@@ -14,12 +17,6 @@ def convert_to_mono(audio):
     """오디오 파일을 모노로 변환합니다."""
     if audio.channels != 1:
         audio = audio.set_channels(1)
-    return audio
-
-def resample_audio(audio, target_sample_rate=48000):
-    """오디오 파일을 리샘플링합니다."""
-    if audio.frame_rate != target_sample_rate:
-        audio = audio.set_frame_rate(target_sample_rate)
     return audio
 
 def convert_to_16bit(audio):
@@ -54,35 +51,85 @@ def transcribe_audio_chunk(audio_chunk, sample_rate):
 
     return transcripts
 
-def transcribe_audio_file(file_path):
-    """오디오 파일을 텍스트로 변환합니다."""
+def transcribe_audio_file(file_path, diarization_results):
+    """오디오 파일을 텍스트로 변환하고 화자별로 대화 내용을 저장합니다."""
     # 오디오 파일의 샘플 레이트 확인
     sample_rate = get_sample_rate(file_path)
 
     # 오디오 파일 로드 및 변환
     audio = AudioSegment.from_file(file_path)
     audio = convert_to_mono(audio)
-    audio = resample_audio(audio, target_sample_rate=sample_rate)
     audio = convert_to_16bit(audio)
 
-    # 오디오 파일을 30초 조각으로 나누기
-    chunk_length_ms = 30000  # 30초
-    all_transcripts = []
-    for i in range(0, len(audio), chunk_length_ms):
-        chunk = audio[i:i + chunk_length_ms]
-        print(f"Transcribing chunk {i // chunk_length_ms}...")
-        transcripts = transcribe_audio_chunk(chunk, sample_rate)
-        print(transcripts)
-        all_transcripts.extend(transcripts)
+    output_data = []
 
-    return all_transcripts
+    # 화자 별로 음성을 인식
+    for segment in diarization_results:
+        start_time = segment['start'] * 1000  # milliseconds
+        stop_time = segment['stop'] * 1000  # milliseconds
+        speaker = segment['speaker']
+
+        # 해당 구간의 오디오 조각 추출
+        audio_chunk = audio[start_time:stop_time]
+
+        # 오디오 조각 텍스트 변환
+        print(f"Transcribing {speaker} from {segment['start']} to {segment['stop']} seconds...")
+        transcripts = transcribe_audio_chunk(audio_chunk, sample_rate)
+
+        # 대화 내용을 문자열로 합침
+        dialog_content = ' '.join(transcripts)
+
+        # 데이터 추가
+        output_data.append({
+            'start': segment['start'],
+            'stop': segment['stop'],
+            'speaker': speaker,
+            'dialogue': dialog_content
+        })
+
+    return output_data
+
+def diarize_audio(file_path, num_speakers):
+    """화자 분리 수행 후 결과를 반환합니다."""
+    access_token = "-"
+    
+    # 사전 훈련된 화자 분리 모델 로드
+    pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization-3.1", use_auth_token=access_token)
+    pipeline.to(torch.device("cuda"))
+
+    # 오디오 파일 로드
+    waveform, sample_rate = torchaudio.load(file_path)
+
+    # 화자 분리 수행
+    diarization = pipeline({"waveform": waveform, "sample_rate": sample_rate}, num_speakers=num_speakers)
+
+    results = []
+    for turn, _, speaker in diarization.itertracks(yield_label=True):
+        results.append({
+            'start': turn.start,
+            'stop': turn.end,
+            'speaker': f'speaker_{speaker}'
+        })
+
+    return results
 
 # 사용 예제
 audio_file_path = '../resource/audio.wav'
-transcripts = transcribe_audio_file(audio_file_path)
 
-# 전체 텍스트를 fullText.txt 파일에 저장
-with open("fullText.txt", "w", encoding="utf-8") as f:
-    f.write("\n".join(transcripts))
+# 화자 수 입력 받기
+num_speakers = int(input("화자 수를 입력하세요: "))  # 예: 2
 
-print("전체 텍스트가 fullText.txt에 저장되었습니다.")
+# 화자 분리 수행
+diarization_results = diarize_audio(audio_file_path, num_speakers)
+
+# 대화 내용을 텍스트로 변환
+output_data = transcribe_audio_file(audio_file_path, diarization_results)
+
+# DataFrame 생성
+df = pd.DataFrame(output_data)
+
+# DataFrame을 엑셀 파일로 저장
+output_file = "../resource/fullText.xlsx"
+df.to_excel(output_file, index=False)
+
+print(f"화자별 대화 내용이 {output_file}에 저장되었습니다.")

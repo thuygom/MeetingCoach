@@ -22,6 +22,7 @@ decorator==4.4.2
 distro==1.9.0
 docopt==0.6.2
 einops==0.8.0
+et_xmlfile==2.0.0
 filelock==3.16.1
 fonttools==4.54.1
 frozenlist==1.5.0
@@ -65,6 +66,7 @@ numba==0.60.0
 numpy==1.26.4
 omegaconf==2.3.0
 openai==1.52.2
+openpyxl==3.1.5
 optuna==4.0.0
 packaging==24.1
 pandas==2.2.3
