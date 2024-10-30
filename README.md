@@ -111,7 +111,7 @@ Face&amp;Motion regognition And Speaker Diarization with emotion Analysis
    
    def diarize_audio(file_path, num_speakers):
        """화자 분리 수행 후 결과를 반환합니다."""
-       access_token = "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"
+       access_token = ""
        
        # 사전 훈련된 화자 분리 모델 로드
        pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization-3.1", use_auth_token=access_token)
