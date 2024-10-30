@@ -156,7 +156,8 @@ Face&amp;Motion regognition And Speaker Diarization with emotion Analysis
    
    ```
 
-   ![speech2text](C:\Users\bandl\OneDrive\바탕 화면\videoAnalysis\screenShot\speech2text.PNG)
+![speech2text](https://github.com/user-attachments/assets/94c4dd97-40b5-413d-ab29-360e956fff55)
+
 
    mp4파일을 moviepy라이브러리를 통해 wav형식으로 변환한 후, Google Api중 speech to text를 활용해 음성을 텍스트로 추출한다.
 
@@ -212,15 +213,17 @@ Face&amp;Motion regognition And Speaker Diarization with emotion Analysis
    
    ```
 
-   ![diarization](C:\Users\bandl\OneDrive\바탕 화면\videoAnalysis\screenShot\diarization.PNG)
+![diarization](https://github.com/user-attachments/assets/9aaa110a-e26c-4a87-a72f-68200fcd9694)
+
 
    hugging face 에 업로드 되어있는 pyannote speak Diarization 모델의 Pretrainned 모델을 활용해 화자수 입력데이터를 기반으로 화자분리를 진행한다.
 
-   ![diarization_result](C:\Users\bandl\OneDrive\바탕 화면\videoAnalysis\screenShot\diarization_result.PNG)
+![diarization_result](https://github.com/user-attachments/assets/9ec64776-71cb-4eef-a04f-07df02901140)
+
 
    이처럼 타임스탬프와 더불어 얘기한 내용을 연계하여 결과물로 얻는다. 이를 기반으로 start시간과 stop시간 계산을 통해 대화중 끼어드는 사람또한 찾을 수있다. 주황색점이 여러명의 화자가 얘기해 RMS에너지가 높아진 경우이며 이러한 경우에 타임스탬프를 통해 누가 끼어들었는지를 확인할 수 있다. 이를 통해 화자가 얘기한 내용을 더욱 정확히 분리할 수 있다.
 
-   ![끼어들기](C:\Users\bandl\OneDrive\바탕 화면\videoAnalysis\screenShot\끼어들기.PNG)
+![끼어들기](https://github.com/user-attachments/assets/9821eef4-d4f1-418c-b7b9-0e07d02b3eb7)
 
 3.  openAi LLM API 활용 텍스트 요약
 
@@ -268,7 +271,8 @@ Face&amp;Motion regognition And Speaker Diarization with emotion Analysis
    
    ```
 
-   ![summurize](C:\Users\bandl\OneDrive\바탕 화면\videoAnalysis\screenShot\summurize.PNG)
+![summurize](https://github.com/user-attachments/assets/ca4e775f-4640-4d29-97d5-19a64ebe9f2f)
+
 
    이처럼 추출한 텍스트를 기반으로 요약을 생성한다.
 
@@ -346,7 +350,7 @@ Face&amp;Motion regognition And Speaker Diarization with emotion Analysis
    
    ```
 
-   ![voice_emotion](C:\Users\bandl\OneDrive\바탕 화면\videoAnalysis\screenShot\voice_emotion.PNG)
+![voice_emotion](https://github.com/user-attachments/assets/a9be636f-1091-4065-bdb0-7f2a587ba7cc)
 
    다음과 같이 타임스탬프를 기반으로 감정을 Anger, Sadness, Happiness, Neutral로 구분지어 감정분석한다.
 
@@ -387,7 +391,7 @@ Face&amp;Motion regognition And Speaker Diarization with emotion Analysis
    
    ```
 
-   ![SpeakerVerification](C:\Users\bandl\OneDrive\바탕 화면\videoAnalysis\screenShot\SpeakerVerification.PNG)
+![SpeakerVerification](https://github.com/user-attachments/assets/fe0ec734-4ff6-4772-8c4a-cac28b8eead3)
 
    본인의 음성데이터를 기반으로 테스트 해본 결과이며, 다른 문장을 얘기하더라도 기본적인 음성의 피치 및 톤을 기반으로 유사도를 검출해 Speaker0이 누구인지를 유추할 수 있는 모듈을 구현했다.
 
