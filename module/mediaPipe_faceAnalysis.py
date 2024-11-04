@@ -6,7 +6,7 @@ mp_face_mesh = mp.solutions.face_mesh
 mp_hands = mp.solutions.hands
 
 # 비디오 파일 경로
-video_file = "path/to/your/video.mp4"  # 사용할 MP4 파일의 경로로 변경하세요
+video_file = "../../resource/face.mp4"  # 사용할 MP4 파일의 경로로 변경하세요
 
 # 비디오 캡처 객체 생성
 cap = cv2.VideoCapture(video_file)
